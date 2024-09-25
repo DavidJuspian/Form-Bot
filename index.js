@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const axios = require('axios');
 const randomName = require('random-name');
 require('dotenv').config();
+const express = require('express');
 
 // Generar nombre completo aleatorio con 'random-name'
 function generarNombreAleatorio() {
@@ -109,7 +110,6 @@ async function ejecutarSolicitud() {
         await page.click('#submitButton');
         await new Promise(resolve => setTimeout(resolve, 10000));
 
-        
         console.log('Formulario enviado');
     } catch (error) {
         console.error("Error en el proceso: ", error.message);
@@ -126,5 +126,18 @@ async function ejecutarSolicitud() {
     }
 }
 
-// Iniciar el loop infinito
-ejecutarSolicitud();
+// Configurar el servidor Express
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Bot en ejecución');
+});
+
+// Iniciar servidor web y ejecutar el bot
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+    
+    // Iniciar el bot cuando el servidor web esté listo
+    ejecutarSolicitud();
+});
